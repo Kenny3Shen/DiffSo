@@ -1758,6 +1758,7 @@ class Trainer(object):
                     nrow = all_images.shape[0]
                 if save_parent:
                     folder_name = "_".join(file_name.split("_")[:-1])
+                    os.makedirs(self.results_folder / folder_name, exist_ok=True)
                     utils.save_image(
                         all_images,
                         str(self.results_folder / folder_name / file_name),

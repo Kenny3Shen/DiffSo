@@ -147,7 +147,7 @@ class Dataset(Dataset):
             img1 = self.cv2equalizeHist(img1) if self.equalizeHist else img1
 
             # weighted sobel
-            img2 = self.cv2weightedSobel(img2) if self.get_sobel else img2    
+            img2 = self.cv2edge(img2) if self.get_sobel else img2    
             images = [[img0, img1, img2]]
             p = Augmentor.DataPipeline(images)
             if self.augment_flip:
@@ -193,26 +193,26 @@ class Dataset(Dataset):
     def ht(self, img):
         if self.halftone == 'fs':
             (b, g, r) = cv2.split(img)
-            b = Image.fromarray(b).convert('1').convert('L')
-            g = Image.fromarray(g).convert('1').convert('L')
-            r = Image.fromarray(r).convert('1').convert('L')
-            img = cv2.merge((np.array(b), np.array(g), np.array(r)))
+            b = np.array(Image.fromarray(b).convert('1').convert('L'))
+            g = np.array(Image.fromarray(g).convert('1').convert('L'))
+            r = np.array(Image.fromarray(r).convert('1').convert('L'))
+            img = cv2.merge((b, g, r))
         elif self.halftone == 'evcs':
             (b, g, r) = cv2.split(img_bgr)
             b, g, r = (b / 4).astype(np.uint8), (g / 4).astype(np.uint8), (r / 4).astype(np.uint8)
-            b = Image.fromarray(b).convert('1').convert('L')
-            g = Image.fromarray(g).convert('1').convert('L')
-            r = Image.fromarray(r).convert('1').convert('L')
-            img = cv2.merge((np.array(b), np.array(g), np.array(r)))
+            b = np.array(Image.fromarray(b).convert('1').convert('L'))
+            g = np.array(Image.fromarray(g).convert('1').convert('L'))
+            r = np.array(Image.fromarray(r).convert('1').convert('L'))
+            img = cv2.merge((b, g, r))
         elif self.halftone == 'gmevcs':
             img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
             img_hsv[:, :, 2] = (img_hsv[:, :, 2] / 4).astype(np.uint8)
             img_bgr = cv2.cvtColor(img_hsv, cv2.COLOR_HSV2BGR)
             (b, g, r) = cv2.split(img_bgr)
-            b = Image.fromarray(b).convert('1').convert('L')
-            g = Image.fromarray(g).convert('1').convert('L')
-            r = Image.fromarray(r).convert('1').convert('L')
-            img = cv2.merge((np.array(b), np.array(g), np.array(r)))
+            b = np.array(Image.fromarray(b).convert('1').convert('L'))
+            g = np.array(Image.fromarray(g).convert('1').convert('L'))
+            r = np.array(Image.fromarray(r).convert('1').convert('L'))
+            img = cv2.merge((b, g, r))
         return img
 
     def cv2equalizeHist(self, img):
@@ -227,21 +227,21 @@ class Dataset(Dataset):
         img = cv2.GaussianBlur(img, (3, 3), 0)
         return img
 
-    def cv2weightedSobel(self, img):
+    def cv2edge(self, img):
         if self.get_sobel == 'wsobel':
             img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             img_sobel_x = cv2.Sobel(img_gray, cv2.CV_64F, 1, 0, ksize=3)
             img_sobel_x = cv2.convertScaleAbs(img_sobel_x)
             img_sobel_y = cv2.Sobel(img_gray, cv2.CV_64F, 0, 1, ksize=3)
             img_sobel_y = cv2.convertScaleAbs(img_sobel_y)
-            img_sobel = cv2.addWeighted(img_sobel_x, 0.5, img_sobel_y, 0.5, 0)
+            img_edge = cv2.addWeighted(img_sobel_x, 0.5, img_sobel_y, 0.5, 0)
         elif self.get_sobel == 'sobel':
             img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            img_sobel = cv2.Sobel(img_gray, cv2.CV_64F, 1, 1, ksize=3)
+            img_edge = cv2.Sobel(img_gray, cv2.CV_64F, 1, 1, ksize=3)
         elif self.get_sobel == 'canny':
             img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            img_sobel = cv2.Canny(img_gray, 100, 200)
-        return img_sobel
+            img_edge = cv2.Canny(img_gray, 100, 200)
+        return img_edge
     def to_tensor(self, img):
         img = Image.fromarray(img)  # returns an image object.
         img_t = TF.to_tensor(img).float()

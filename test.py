@@ -35,11 +35,11 @@ else:
 if condition:
     if input_condition:
         folder = ["/home/shenss/python/dataset/VOC2012_ORI/train/gt",
-                "/home/shenss/python/dataset/VOC2012_ORI/train/evcs",
+                "/home/shenss/python/dataset/VOC2012_ORI/train/fs",
                 "/home/shenss/python/dataset/VOC2012_ORI/train/wsobel",
-                "/home/shenss/python/dataset/Kodak24/gt",
-                "/home/shenss/python/dataset/Kodak24/fs",
-                "/home/shenss/python/dataset/Kodak24/gt"
+                "/home/shenss/python/dataset/Urban100/gt",
+                "/home/shenss/python/dataset/Urban100/fs",
+                "/home/shenss/python/dataset/Urban100/wsobel"
                 ]
     else:
         folder = ["/home/sss/python/dataset/Celebrity Face Image Dataset/train/gt",
@@ -109,7 +109,7 @@ trainer = Trainer(
     generation = False,
     halftone = None,  # fs, evcs, gmevcs
     gaussian_filter = True,
-    get_sobel = 'wsobel',  # None, sobel, canny, wsobel
+    get_sobel = None,  # None, sobel, canny, wsobel
 )
 
 if not trainer.accelerator.is_local_main_process:
@@ -117,7 +117,7 @@ if not trainer.accelerator.is_local_main_process:
 else:
     epoch = 30
     trainer.load(epoch)
-    trainer.set_results_folder(f'./results/DiffSo_Kodak24_ts{sampling_timesteps}_ep{epoch}')
+    trainer.set_results_folder(f'./results/DiffSo_GS5_{epoch}')
     trainer.test(last=True)
 
 # trainer.set_results_folder('./results/test_sample')

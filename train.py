@@ -34,27 +34,24 @@ else:
 
 if condition:
     if input_condition:
-        folder = ["/home/sss/python/dataset/VOC2012_ORI/train/gt",
-                "/home/sss/python/dataset/VOC2012_ORI/train/evcs",
-                "/home/sss/python/dataset/VOC2012_ORI/train/wsobel",
-                "/home/sss/python/dataset/VOC2012_ORI/valid/gt",
-                "/home/sss/python/dataset/VOC2012_ORI/valid/evcs",
-                "/home/sss/python/dataset/VOC2012_ORI/valid/wsobel"
-                # "/home/sss/python/dataset/Celebrity Face Image Dataset/test/gt_256",
-                # "/home/sss/python/dataset/Celebrity Face Image Dataset/test/FS_256",
-                # "/home/sss/python/dataset/Celebrity Face Image Dataset/test/wSobel_256"
+        folder = ["/home/shenss/python/dataset/VOC2012_ORI/train/gt",
+                "/home/shenss/python/dataset/VOC2012_ORI/train/fs",
+                "/home/shenss/python/dataset/VOC2012_ORI/train/wsobel",
+                "/home/shenss/python/dataset/VOC2012_ORI/valid/gt",
+                "/home/shenss/python/dataset/VOC2012_ORI/valid/fs",
+                "/home/shenss/python/dataset/VOC2012_ORI/valid/wsobel",
                 ]
     else:
-        folder = ["/home/sss/python/dataset/Celebrity Face Image Dataset/train/gt",
-                "/home/sss/python/dataset/Celebrity Face Image Dataset/train/input_ht_rgb",
-                "/home/sss/python/dataset/Celebrity Face Image Dataset/test/gt",
-                "/home/sss/python/dataset/Celebrity Face Image Dataset/test/input_ht_rgb"]
+        folder = ["/home/shenss/python/dataset/Celebrity Face Image Dataset/train/gt",
+                "/home/shenss/python/dataset/Celebrity Face Image Dataset/train/input_ht_rgb",
+                "/home/shenss/python/dataset/Celebrity Face Image Dataset/test/gt",
+                "/home/shenss/python/dataset/Celebrity Face Image Dataset/test/input_ht_rgb"]
     train_batch_size = 1
     num_samples = 1
     sum_scale = 1
     image_size = 256
 else:
-    folder = '/home/sss/python/dataset/CelebA/img_align_celeba'
+    folder = '/home/shenss/python/dataset/CelebA/img_align_celeba'
     train_batch_size = 32
     num_samples = 25
     sum_scale = 1

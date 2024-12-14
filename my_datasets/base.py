@@ -1,7 +1,7 @@
 import os
 import random
 from pathlib import Path
-
+import pywt
 import Augmentor
 import cv2
 import numpy as np
@@ -215,6 +215,28 @@ class Dataset(Dataset):
             img = cv2.merge((b, g, r))
         return img
 
+    def remove_high_freq(img, wavelet='haar', level=1):
+        # 分离RGB通道
+        b, g, r = cv2.split(img)
+        channels = []
+        
+        # 对每个通道进行DWT处理
+        for c in [b, g, r]:
+            coeffs = pywt.wavedec2(c, wavelet, level=level)
+            # 将高频系数置零
+            coeffs_H = list(coeffs)
+            coeffs_H[1:] = [(np.zeros_like(cH), np.zeros_like(cV), np.zeros_like(cD)) 
+                            for cH, cV, cD in coeffs_H[1:]]
+            
+            # 重构图像
+            reconstructed = pywt.waverec2(coeffs_H, wavelet)
+            reconstructed = np.clip(reconstructed, 0, 255).astype(np.uint8)
+            channels.append(reconstructed)
+        
+        # 合并通道
+        img_reconstructed = cv2.merge(channels)
+        return img_reconstructed
+
     def cv2equalizeHist(self, img):
         (b, g, r) = cv2.split(img)
         b = cv2.equalizeHist(b)
@@ -224,7 +246,7 @@ class Dataset(Dataset):
         return img
     
     def cv2gaussian_filter(self, img):
-        img = cv2.GaussianBlur(img, (3, 3), 0)
+        img = cv2.GaussianBlur(img, (5, 5), 0)
         return img
 
     def cv2edge(self, img):

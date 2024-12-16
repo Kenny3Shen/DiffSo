@@ -215,7 +215,7 @@ class Dataset(Dataset):
             img = cv2.merge((b, g, r))
         return img
 
-    def remove_high_freq(img, wavelet='haar', level=1):
+    def remove_high_freq(self, img, wavelet='haar', level=1):
         # 分离RGB通道
         b, g, r = cv2.split(img)
         channels = []
@@ -246,7 +246,7 @@ class Dataset(Dataset):
         return img
     
     def cv2gaussian_filter(self, img):
-        img = cv2.GaussianBlur(img, (5, 5), 0)
+        img = cv2.GaussianBlur(img, (3, 3), 0)
         return img
 
     def cv2edge(self, img):

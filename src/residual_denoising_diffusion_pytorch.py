@@ -1565,8 +1565,11 @@ class Trainer(object):
 
         torch.save(data, str(self.results_folder / f"model-{milestone}.pt"))
 
-    def load(self, milestone):
-        path = Path(self.results_folder / f"model-{milestone}.pt")
+    def load(self, milestone, load_name=None):
+        if load_name:
+            path = Path(os.path.join("./results", load_name, f"model-{milestone}.pt"))
+        else:
+            path = Path(self.results_folder / f"model-{milestone}.pt")
 
         if path.exists():
             data = torch.load(str(path), map_location=self.device)

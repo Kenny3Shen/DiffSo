@@ -78,15 +78,20 @@ class Dataset(Dataset):
             if self.crop_patch and not self.sample:
                 img0, img1 = self.get_patch([img0, img1], self.image_size)
 
-            img1 = self.cv2equalizeHist(img1) if self.equalizeHist else img1
+            img1 = self.ht(img1) if self.halftone else img1
 
+            img1 = self.cv2gaussian_filter(img1) if self.gaussian_filter else img1
+
+            img1 = self.cv2equalizeHist(img1) if self.equalizeHist else img1
+            
+            img2 = self.cv2edge(img1) if self.get_sobel else img2
             images = [[img0, img1]]
             p = Augmentor.DataPipeline(images)
             if self.augment_flip:
                 p.flip_left_right(1)
             if not self.crop_patch:
-                p.resize(1, self.image_size, self.image_size)
-                # p.crop_by_size(1, self.image_size, self.image_size, centre=False)
+                #p.resize(1, self.image_size, self.image_size)
+                p.crop_by_size(1, self.image_size, self.image_size, centre=False)
             g = p.generator(batch_size=1)
             augmented_images = next(g)
             img0 = cv2.cvtColor(augmented_images[0][0], cv2.COLOR_BGR2RGB)

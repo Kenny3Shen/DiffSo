@@ -117,7 +117,7 @@ if not trainer.accelerator.is_local_main_process:
 else:
     epoch = 80
     trainer.load(epoch, load_name='DiffSo_GS3_80K_TS5_Model')
-    trainer.set_results_folder(f'./results/DiffSo_Manga109_{epoch}K_TS5')
+    trainer.set_results_folder(f'./results/DiffSo_Manga109_{epoch}K_TS5_SampleTrue')
     trainer.test(last=True)
 
 # trainer.set_results_folder('./results/test_sample')

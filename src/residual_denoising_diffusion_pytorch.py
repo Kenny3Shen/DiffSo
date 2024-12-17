@@ -1356,6 +1356,10 @@ class Trainer(object):
                     crop_patch=crop_patch,
                     sample=True,
                     generation=generation,
+                    halftone=halftone,
+                    gaussian_filter=gaussian_filter,
+                    get_sobel=get_sobel,
+                    
                 )
                 trian_folder = folder[0:2]
 
@@ -1381,6 +1385,9 @@ class Trainer(object):
                     equalizeHist=equalizeHist,
                     crop_patch=crop_patch,
                     generation=generation,
+                    halftone=halftone,
+                    gaussian_filter=gaussian_filter,
+                    get_sobel=get_sobel,
                 )
                 self.dl = cycle(
                     self.accelerator.prepare(
@@ -1406,6 +1413,9 @@ class Trainer(object):
                     crop_patch=crop_patch,
                     sample=True,
                     generation=generation,
+                    halftone=halftone,
+                    gaussian_filter=gaussian_filter,
+                    get_sobel=get_sobel,
                 )
                 trian_folder = folder[0:2]
 
@@ -1431,6 +1441,9 @@ class Trainer(object):
                     equalizeHist=equalizeHist,
                     crop_patch=crop_patch,
                     generation=generation,
+                    halftone=halftone,
+                    gaussian_filter=gaussian_filter,
+                    get_sobel=get_sobel,
                 )
                 self.dl = cycle(
                     self.accelerator.prepare(
@@ -1484,6 +1497,9 @@ class Trainer(object):
                     equalizeHist=equalizeHist,
                     crop_patch=crop_patch,
                     generation=generation,
+                    halftone=halftone,
+                    gaussian_filter=gaussian_filter,
+                    get_sobel=get_sobel,
                 )
                 self.dl = cycle(
                     self.accelerator.prepare(

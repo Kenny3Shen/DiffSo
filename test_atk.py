@@ -38,8 +38,8 @@ if condition:
                 "/home/shenss/python/dataset/VOC2012_ORI/train/fs",
                 "/home/shenss/python/dataset/VOC2012_ORI/train/wsobel",
                 "/home/shenss/python/attacks/images/original",
-                "/home/shenss/python/attacks/images/adversarial",
-                "/home/shenss/python/attacks/images/adversarial"
+                "/home/shenss/python/attacks/images/original",
+                "/home/shenss/python/attacks/images/original"
                 ]
     else:
         folder = ["/home/sss/python/dataset/Celebrity Face Image Dataset/train/gt",
@@ -117,7 +117,7 @@ if not trainer.accelerator.is_local_main_process:
 else:
     epoch = 80
     trainer.load(epoch, load_name='DiffSo_GS3_80K_TS5_Model')
-    trainer.set_results_folder(f'/home/shenss/python/attacks/images/ht_adv_std')
+    trainer.set_results_folder(f'/home/shenss/python/attacks/images/ht_ori_std_new')
     trainer.test(last=True)
 
 # trainer.set_results_folder('./results/test_sample')

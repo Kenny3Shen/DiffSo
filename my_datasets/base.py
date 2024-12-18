@@ -15,12 +15,13 @@ def convert_image_to_fn(img_type, image):
         return image.convert(img_type)
     return image
 
+
 class Dataset(Dataset):
     def __init__(
         self,
         folder,
         image_size,
-        exts=['jpg', 'jpeg', 'png', 'tiff'],
+        exts=["jpg", "jpeg", "png", "tiff"],
         augment_flip=False,
         convert_image_to=None,
         condition=0,
@@ -29,7 +30,7 @@ class Dataset(Dataset):
         halftone=None,
         gaussian_filter=False,
         get_sobel=None,
-        sample=False
+        sample=False,
     ):
         super().__init__()
         self.equalizeHist = equalizeHist
@@ -68,10 +69,16 @@ class Dataset(Dataset):
             img0 = Image.open(self.gt[index])
             img1 = Image.open(self.input[index])
             w, h = img0.size
-            img0 = convert_image_to_fn(
-                self.convert_image_to, img0) if self.convert_image_to else img0
-            img1 = convert_image_to_fn(
-                self.convert_image_to, img1) if self.convert_image_to else img1
+            img0 = (
+                convert_image_to_fn(self.convert_image_to, img0)
+                if self.convert_image_to
+                else img0
+            )
+            img1 = (
+                convert_image_to_fn(self.convert_image_to, img1)
+                if self.convert_image_to
+                else img1
+            )
 
             img0, img1 = self.pad_img([img0, img1], self.image_size)
 
@@ -83,14 +90,14 @@ class Dataset(Dataset):
             img1 = self.cv2gaussian_filter(img1) if self.gaussian_filter else img1
 
             img1 = self.cv2equalizeHist(img1) if self.equalizeHist else img1
-            
+
             img2 = self.cv2edge(img1) if self.get_sobel else img2
             images = [[img0, img1]]
             p = Augmentor.DataPipeline(images)
             if self.augment_flip:
                 p.flip_left_right(1)
             if not self.crop_patch:
-                #p.resize(1, self.image_size, self.image_size)
+                # p.resize(1, self.image_size, self.image_size)
                 p.crop_by_size(1, self.image_size, self.image_size, centre=False)
             g = p.generator(batch_size=1)
             augmented_images = next(g)
@@ -102,8 +109,11 @@ class Dataset(Dataset):
             # generation
             path = self.paths[index]
             img = Image.open(path)
-            img = convert_image_to_fn(
-                self.convert_image_to, img) if self.convert_image_to else img
+            img = (
+                convert_image_to_fn(self.convert_image_to, img)
+                if self.convert_image_to
+                else img
+            )
 
             img = self.pad_img([img], self.image_size)[0]
 
@@ -128,21 +138,28 @@ class Dataset(Dataset):
             img0 = Image.open(self.gt[index])
             img1 = Image.open(self.input[index])
             img2 = Image.open(self.input_condition[index])
-            img0 = convert_image_to_fn(
-                self.convert_image_to, img0) if self.convert_image_to else img0
-            img1 = convert_image_to_fn(
-                self.convert_image_to, img1) if self.convert_image_to else img1
-            img2 = convert_image_to_fn(
-                self.convert_image_to, img2) if self.convert_image_to else img2
+            img0 = (
+                convert_image_to_fn(self.convert_image_to, img0)
+                if self.convert_image_to
+                else img0
+            )
+            img1 = (
+                convert_image_to_fn(self.convert_image_to, img1)
+                if self.convert_image_to
+                else img1
+            )
+            img2 = (
+                convert_image_to_fn(self.convert_image_to, img2)
+                if self.convert_image_to
+                else img2
+            )
 
-            img0, img1, img2 = self.pad_img(
-                [img0, img1, img2], self.image_size)
+            img0, img1, img2 = self.pad_img([img0, img1, img2], self.image_size)
 
             if self.crop_patch and not self.sample:
-                img0, img1, img2 = self.get_patch(
-                    [img0, img1, img2], self.image_size)
+                img0, img1, img2 = self.get_patch([img0, img1, img2], self.image_size)
 
-            # halftone 
+            # halftone
             img1 = self.ht(img1) if self.halftone else img1
 
             # gaussian filter
@@ -152,13 +169,13 @@ class Dataset(Dataset):
             img1 = self.cv2equalizeHist(img1) if self.equalizeHist else img1
 
             # weighted sobel
-            img2 = self.cv2edge(img2) if self.get_sobel else img2    
+            img2 = self.cv2edge(img2) if self.get_sobel else img2
             images = [[img0, img1, img2]]
             p = Augmentor.DataPipeline(images)
             if self.augment_flip:
                 p.flip_left_right(1)
             if not self.crop_patch:
-                #p.resize(1, self.image_size, self.image_size)
+                # p.resize(1, self.image_size, self.image_size)
                 p.crop_by_size(1, self.image_size, self.image_size, centre=False)
             g = p.generator(batch_size=1)
             augmented_images = next(g)
@@ -178,66 +195,72 @@ class Dataset(Dataset):
                 # file_list = [p for ext in self.exts for p in Path(f'{flist}').glob(f'**/*.{ext}')]
                 # print(file_list)  # 打印列表
                 # return file_list
-                
+
                 p = []
-                for root, dirs, files in os.walk(Path(f'{flist}')):
+                for root, dirs, files in os.walk(Path(f"{flist}")):
                     for file in files:
                         if file.endswith(tuple(self.exts)):
                             p.append(Path(root) / file)  # 使用 Path 类构建路径
-                #print(p)
+                # print(p)
                 return p
-                            
+
             if os.path.isfile(flist):
                 try:
-                    return np.genfromtxt(flist, dtype=np.str, encoding='utf-8')
+                    return np.genfromtxt(flist, dtype=np.str, encoding="utf-8")
                 except:
                     return [flist]
 
         return []
-    
+
     def ht(self, img):
-        if self.halftone == 'fs':
+        if self.halftone == "fs":
             (b, g, r) = cv2.split(img)
-            b = np.array(Image.fromarray(b).convert('1').convert('L'))
-            g = np.array(Image.fromarray(g).convert('1').convert('L'))
-            r = np.array(Image.fromarray(r).convert('1').convert('L'))
+            b = np.array(Image.fromarray(b).convert("1").convert("L"))
+            g = np.array(Image.fromarray(g).convert("1").convert("L"))
+            r = np.array(Image.fromarray(r).convert("1").convert("L"))
             img = cv2.merge((b, g, r))
-        elif self.halftone == 'evcs':
+        elif self.halftone == "evcs":
             (b, g, r) = cv2.split(img_bgr)
-            b, g, r = (b / 4).astype(np.uint8), (g / 4).astype(np.uint8), (r / 4).astype(np.uint8)
-            b = np.array(Image.fromarray(b).convert('1').convert('L'))
-            g = np.array(Image.fromarray(g).convert('1').convert('L'))
-            r = np.array(Image.fromarray(r).convert('1').convert('L'))
+            b, g, r = (
+                (b / 4).astype(np.uint8),
+                (g / 4).astype(np.uint8),
+                (r / 4).astype(np.uint8),
+            )
+            b = np.array(Image.fromarray(b).convert("1").convert("L"))
+            g = np.array(Image.fromarray(g).convert("1").convert("L"))
+            r = np.array(Image.fromarray(r).convert("1").convert("L"))
             img = cv2.merge((b, g, r))
-        elif self.halftone == 'gmevcs':
+        elif self.halftone == "gmevcs":
             img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
             img_hsv[:, :, 2] = (img_hsv[:, :, 2] / 4).astype(np.uint8)
             img_bgr = cv2.cvtColor(img_hsv, cv2.COLOR_HSV2BGR)
             (b, g, r) = cv2.split(img_bgr)
-            b = np.array(Image.fromarray(b).convert('1').convert('L'))
-            g = np.array(Image.fromarray(g).convert('1').convert('L'))
-            r = np.array(Image.fromarray(r).convert('1').convert('L'))
+            b = np.array(Image.fromarray(b).convert("1").convert("L"))
+            g = np.array(Image.fromarray(g).convert("1").convert("L"))
+            r = np.array(Image.fromarray(r).convert("1").convert("L"))
             img = cv2.merge((b, g, r))
         return img
 
-    def remove_high_freq(self, img, wavelet='haar', level=1):
+    def remove_high_freq(self, img, wavelet="haar", level=1):
         # 分离RGB通道
         b, g, r = cv2.split(img)
         channels = []
-        
+
         # 对每个通道进行DWT处理
         for c in [b, g, r]:
             coeffs = pywt.wavedec2(c, wavelet, level=level)
             # 将高频系数置零
             coeffs_H = list(coeffs)
-            coeffs_H[1:] = [(np.zeros_like(cH), np.zeros_like(cV), np.zeros_like(cD)) 
-                            for cH, cV, cD in coeffs_H[1:]]
-            
+            coeffs_H[1:] = [
+                (np.zeros_like(cH), np.zeros_like(cV), np.zeros_like(cD))
+                for cH, cV, cD in coeffs_H[1:]
+            ]
+
             # 重构图像
             reconstructed = pywt.waverec2(coeffs_H, wavelet)
             reconstructed = np.clip(reconstructed, 0, 255).astype(np.uint8)
             channels.append(reconstructed)
-        
+
         # 合并通道
         img_reconstructed = cv2.merge(channels)
         return img_reconstructed
@@ -249,26 +272,27 @@ class Dataset(Dataset):
         r = cv2.equalizeHist(r)
         img = cv2.merge((b, g, r))
         return img
-    
+
     def cv2gaussian_filter(self, img):
         img = cv2.GaussianBlur(img, (3, 3), 0)
         return img
 
     def cv2edge(self, img):
-        if self.get_sobel == 'wsobel':
+        if self.get_sobel == "wsobel":
             img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             img_sobel_x = cv2.Sobel(img_gray, cv2.CV_64F, 1, 0, ksize=3)
             img_sobel_x = cv2.convertScaleAbs(img_sobel_x)
             img_sobel_y = cv2.Sobel(img_gray, cv2.CV_64F, 0, 1, ksize=3)
             img_sobel_y = cv2.convertScaleAbs(img_sobel_y)
             img_edge = cv2.addWeighted(img_sobel_x, 0.5, img_sobel_y, 0.5, 0)
-        elif self.get_sobel == 'sobel':
+        elif self.get_sobel == "sobel":
             img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             img_edge = cv2.Sobel(img_gray, cv2.CV_64F, 1, 1, ksize=3)
-        elif self.get_sobel == 'canny':
+        elif self.get_sobel == "canny":
             img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             img_edge = cv2.Canny(img_gray, 100, 200)
         return img_edge
+
     def to_tensor(self, img):
         img = Image.fromarray(img)  # returns an image object.
         img_t = TF.to_tensor(img).float()
@@ -283,15 +307,15 @@ class Dataset(Dataset):
             elif sub_dir == 1:
                 path = os.path.dirname(name)
                 sub_dir = (path.split("/"))[-1]
-                return sub_dir+"_"+os.path.basename(name)
+                return sub_dir + "_" + os.path.basename(name)
 
     def get_patch(self, image_list, patch_size):
         i = 0
         h, w = image_list[0].shape[:2]
-        rr = random.randint(0, h-patch_size)
-        cc = random.randint(0, w-patch_size)
+        rr = random.randint(0, h - patch_size)
+        cc = random.randint(0, w - patch_size)
         for img in image_list:
-            image_list[i] = img[rr:rr+patch_size, cc:cc+patch_size, :]
+            image_list[i] = img[rr : rr + patch_size, cc : cc + patch_size, :]
             i += 1
         return image_list
 
@@ -303,17 +327,26 @@ class Dataset(Dataset):
             bottom = 0
             right = 0
             if h < patch_size:
-                bottom = patch_size-h
+                bottom = patch_size - h
                 h = patch_size
             if w < patch_size:
-                right = patch_size-w
+                right = patch_size - w
                 w = patch_size
-            bottom = bottom + (h // block_size) * block_size + \
-                (block_size if h % block_size != 0 else 0) - h
-            right = right + (w // block_size) * block_size + \
-                (block_size if w % block_size != 0 else 0) - w
+            bottom = (
+                bottom
+                + (h // block_size) * block_size
+                + (block_size if h % block_size != 0 else 0)
+                - h
+            )
+            right = (
+                right
+                + (w // block_size) * block_size
+                + (block_size if w % block_size != 0 else 0)
+                - w
+            )
             img_list[i] = cv2.copyMakeBorder(
-                img, 0, bottom, 0, right, cv2.BORDER_CONSTANT, value=[0, 0, 0])
+                img, 0, bottom, 0, right, cv2.BORDER_CONSTANT, value=[0, 0, 0]
+            )
             i += 1
         return img_list
 
@@ -325,13 +358,21 @@ class Dataset(Dataset):
         bottom = 0
         right = 0
         if h < patch_size:
-            bottom = patch_size-h
+            bottom = patch_size - h
             h = patch_size
         if w < patch_size:
-            right = patch_size-w
+            right = patch_size - w
             w = patch_size
-        bottom = bottom + (h // block_size) * block_size + \
-            (block_size if h % block_size != 0 else 0) - h
-        right = right + (w // block_size) * block_size + \
-            (block_size if w % block_size != 0 else 0) - w
+        bottom = (
+            bottom
+            + (h // block_size) * block_size
+            + (block_size if h % block_size != 0 else 0)
+            - h
+        )
+        right = (
+            right
+            + (w // block_size) * block_size
+            + (block_size if w % block_size != 0 else 0)
+            - w
+        )
         return [bottom, right]

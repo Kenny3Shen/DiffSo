@@ -91,7 +91,6 @@ class Dataset(Dataset):
 
             img1 = self.cv2equalizeHist(img1) if self.equalizeHist else img1
 
-            img2 = self.cv2edge(img1) if self.get_sobel else img2
             images = [[img0, img1]]
             p = Augmentor.DataPipeline(images)
             if self.augment_flip:
@@ -291,6 +290,9 @@ class Dataset(Dataset):
         elif self.get_sobel == "canny":
             img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             img_edge = cv2.Canny(img_gray, 100, 200)
+        elif self.get_sobel == "zero":
+            img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            img_edge = np.zeros_like(img_gray)
         return img_edge
 
     def to_tensor(self, img):

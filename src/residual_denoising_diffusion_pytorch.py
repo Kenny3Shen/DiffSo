@@ -1713,8 +1713,24 @@ class Trainer(object):
                 )
             print("sampe-save " + file_name)
         return milestone
-
-    def test(self, sample=False, last=True, FID=False, save_parent=False):
+    
+    def cv2edge(self, img, type="wsobel"):
+        if type == "wsobel":
+            img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            img_sobel_x = cv2.Sobel(img_gray, cv2.CV_64F, 1, 0, ksize=3)
+            img_sobel_x = cv2.convertScaleAbs(img_sobel_x)
+            img_sobel_y = cv2.Sobel(img_gray, cv2.CV_64F, 0, 1, ksize=3)
+            img_sobel_y = cv2.convertScaleAbs(img_sobel_y)
+            img_edge = cv2.addWeighted(img_sobel_x, 0.5, img_sobel_y, 0.5, 0)
+        elif type == "sobel":
+            img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            img_edge = cv2.Sobel(img_gray, cv2.CV_64F, 1, 1, ksize=3)
+        elif type == "canny":
+            img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            img_edge = cv2.Canny(img_gray, 100, 200)
+        return img_edge
+    
+    def test(self, sample=False, last=True, FID=False, save_parent=False, sobel=None):
         print("test start")
         if self.condition:
             self.ema.ema_model.eval()
@@ -1775,6 +1791,8 @@ class Trainer(object):
                     nrow = int(math.sqrt(self.num_samples))
                 else:
                     nrow = all_images.shape[0]
+                
+                    
                 if save_parent:
                     folder_name = "_".join(file_name.split("_")[:-1])
                     os.makedirs(self.results_folder / folder_name, exist_ok=True)
@@ -1787,6 +1805,12 @@ class Trainer(object):
                     utils.save_image(
                         all_images, str(self.results_folder / file_name), nrow=nrow
                     )
+                
+                if sobel:
+                    img = cv2.imread(str(self.results_folder / file_name))
+                    img_edge = self.cv2edge(img, type=sobel)
+                    img_edge = Image.fromarray(img_edge)
+                    img_edge.save(str(self.results_folder / file_name))
                 print("test-save " + file_name)
         else:
             if FID:

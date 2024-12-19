@@ -29,8 +29,8 @@ if original_ddim_ddpm:
     input_condition_mask = False
 else:
     condition = True
-    input_condition = True 
-    input_condition_mask = True
+    input_condition = False 
+    input_condition_mask = False
 
 if condition:
     if input_condition:
@@ -39,13 +39,13 @@ if condition:
                 "/home/shenss/python/dataset/VOC2012_ORI/train/wsobel",
                 "/home/shenss/python/dataset/Manga109/gt",
                 "/home/shenss/python/dataset/Manga109/fs",
-                "/home/shenss/python/dataset/Manga109/gt"
+                "/home/shenss/python/dataset/Manga109/fs"
                 ]
     else:
-        folder = ["/home/sss/python/dataset/Celebrity Face Image Dataset/train/gt",
-                "/home/sss/python/dataset/Celebrity Face Image Dataset/train/input_ht_rgb",
-                "/home/sss/python/dataset/Celebrity Face Image Dataset/test/gt",
-                "/home/sss/python/dataset/Celebrity Face Image Dataset/test/input_ht_rgb"]
+        folder = ["/home/shenss/python/dataset/VOC2012_ORI/train/gt",
+                "/home/shenss/python/dataset/VOC2012_ORI/train/fs",
+                "/home/shenss/python/dataset/VOC2012_ORI/valid/gt",
+                "/home/shenss/python/dataset/VOC2012_ORI/valid/fs"]
     train_batch_size = 1
     num_samples = 1
     sum_scale = 1
@@ -109,16 +109,16 @@ trainer = Trainer(
     generation = False,
     halftone = None,  # None, fs, evcs, gmevcs
     gaussian_filter = True,
-    get_sobel = 'wsobel',  # None, sobel, canny, wsobel
+    get_sobel = 'wsobel',  # None, sobel, canny, wsobel, zero
 )
 
 if not trainer.accelerator.is_local_main_process:
     pass
 else:
     epoch = 80
-    trainer.load(epoch, load_name='DiffSo_GS3_80K_TS5_Model')
-    trainer.set_results_folder(f'./results/DiffSo_Manga109_{epoch}K_TS5')
-    trainer.test(last=True)
+    trainer.load(epoch, load_name='RDDM_80K_TS5_Model')
+    trainer.set_results_folder(f'/home/shenss/python/dataset/VOC2012_ORI/valid/rsobel')
+    trainer.test(last=True, sobel='wsobel')
 
 # trainer.set_results_folder('./results/test_sample')
 # trainer.test(sample=True)

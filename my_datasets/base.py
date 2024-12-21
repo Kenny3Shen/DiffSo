@@ -287,6 +287,7 @@ class Dataset(Dataset):
         elif self.get_sobel == "sobel":
             img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             img_edge = cv2.Sobel(img_gray, cv2.CV_64F, 1, 1, ksize=3)
+            img_edge = cv2.convertScaleAbs(img_edge)
         elif self.get_sobel == "canny":
             img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             img_edge = cv2.Canny(img_gray, 100, 200)

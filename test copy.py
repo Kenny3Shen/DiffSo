@@ -37,15 +37,15 @@ if condition:
         folder = ["/home/shenss/python/dataset/VOC2012_ORI/train/gt",
                 "/home/shenss/python/dataset/VOC2012_ORI/train/fs",
                 "/home/shenss/python/dataset/VOC2012_ORI/train/wsobel",
-                "/home/shenss/python/dataset/Celebrity Face Image Dataset/test/gt_256",
-                "/home/shenss/python/dataset/Celebrity Face Image Dataset/test/JJN_256",
-                "/home/shenss/python/dataset/Celebrity Face Image Dataset/test/wSobel_256"
+                "/home/shenss/python/dataset/Kodak24/gt",
+                "/home/shenss/python/dataset/Kodak24/fs",
+                "/home/shenss/python/dataset/Kodak24/gt"
                 ]
     else:
         folder = ["/home/shenss/python/dataset/VOC2012_ORI/train/gt",
                 "/home/shenss/python/dataset/VOC2012_ORI/train/fs",
-                "/home/shenss/python/dataset/Manga109/gt",
-                "/home/shenss/python/dataset/Manga109/fs"]
+                "/home/shenss/python/dataset/Kodak24/gt",
+                "/home/shenss/python/dataset/Kodak24/fs"]
     train_batch_size = 1
     num_samples = 1
     sum_scale = 1
@@ -109,15 +109,15 @@ trainer = Trainer(
     generation = False,
     halftone = None,  # None, fs, evcs, gmevcs
     gaussian_filter = True,
-    get_sobel = None,  # None, sobel, canny, wsobel, zero
+    get_sobel = 'canny',  # None, sobel, canny, wsobel, zero
 )
 
 if not trainer.accelerator.is_local_main_process:
     pass
 else:
     epoch = 80
-    trainer.load(epoch, load_name='DiffSo_GS3_80K_TS5_Model')
-    trainer.set_results_folder(f'./results/DiffSoGS3_CFID_80K_TS5_JJN')
+    trainer.load(epoch, load_name='DiffSo_80K_TS5_Model')
+    trainer.set_results_folder(f'./results/DiffSo_Kodak24_{epoch}K_TS{sampling_timesteps}_canny')
     trainer.test(last=True)
 
 # trainer.set_results_folder('./results/test_sample')

@@ -29,17 +29,17 @@ if original_ddim_ddpm:
     input_condition_mask = False
 else:
     condition = True
-    input_condition = False 
-    input_condition_mask = False
+    input_condition = True 
+    input_condition_mask = True
 
 if condition:
     if input_condition:
         folder = ["/home/shenss/python/dataset/VOC2012_ORI/train/gt",
                 "/home/shenss/python/dataset/VOC2012_ORI/train/fs",
                 "/home/shenss/python/dataset/VOC2012_ORI/train/wsobel",
-                "/home/shenss/python/dataset/Manga109/gt",
-                "/home/shenss/python/dataset/Manga109/fs",
-                "/home/shenss/python/dataset/Manga109/fs"
+                "/home/shenss/python/dataset/Kodak24/gt",
+                "/home/shenss/python/dataset/Kodak24/fs",
+                "/home/shenss/python/dataset/Kodak24/fs"
                 ]
     else:
         folder = ["/home/shenss/python/dataset/VOC2012_ORI/train/gt",
@@ -115,10 +115,10 @@ trainer = Trainer(
 if not trainer.accelerator.is_local_main_process:
     pass
 else:
-    epoch = 80
-    trainer.load(epoch, load_name='RDDM_80K_TS5_Model')
-    trainer.set_results_folder(f'/home/shenss/python/dataset/VOC2012_ORI/valid/rsobel')
-    trainer.test(last=True, sobel='wsobel')
+    epoch = 20
+    trainer.load(epoch, load_name='DiffSo_80K_TS5_Model')
+    trainer.set_results_folder(f'./results/DiffSo_Kodak24_{epoch}K_TS5')
+    trainer.test(last=True)
 
 # trainer.set_results_folder('./results/test_sample')
 # trainer.test(sample=True)

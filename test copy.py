@@ -115,9 +115,9 @@ trainer = Trainer(
 if not trainer.accelerator.is_local_main_process:
     pass
 else:
-    epoch = 80
-    trainer.load(epoch, load_name='DiffSo_80K_TS5_Model')
-    trainer.set_results_folder(f'./results/DiffSo_Kodak24_{epoch}K_TS{sampling_timesteps}_canny')
+    epoch = 20
+    trainer.load(epoch, load_name='DiffSo_GS3_80_TS5_Model_Canny')
+    trainer.set_results_folder(f'./results/DiffSo_Kodak24_{epoch}K_TS{sampling_timesteps}_Canny')
     trainer.test(last=True)
 
 # trainer.set_results_folder('./results/test_sample')

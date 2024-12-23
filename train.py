@@ -108,7 +108,7 @@ trainer = Trainer(
     crop_patch=False,
     generation = False,
     halftone = None,  # fs, evcs, gmevcs
-    gaussian_filter = True,
+    gaussian_filter = 3,
     get_sobel = None,  # None, sobel, canny, wsobel
 )
 

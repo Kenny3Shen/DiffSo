@@ -26,7 +26,7 @@ def dataset(folder,
             sample=False, 
             generation=False,
             halftone=None,
-            gaussian_filter=False,
+            gaussian_filter=None,
             get_sobel=None):
     if generation:
         dataset_import = "generation"

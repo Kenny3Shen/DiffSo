@@ -28,7 +28,7 @@ class Dataset(Dataset):
         equalizeHist=False,
         crop_patch=True,
         halftone=None,
-        gaussian_filter=False,
+        gaussian_filter=None,
         get_sobel=None,
         sample=False,
     ):
@@ -87,7 +87,7 @@ class Dataset(Dataset):
 
             img1 = self.ht(img1) if self.halftone else img1
 
-            img1 = self.cv2gaussian_filter(img1) if self.gaussian_filter else img1
+            img1 = self.cv2gaussian_filter(img1, self.gaussian_filter) if self.gaussian_filter else img1
 
             img1 = self.cv2equalizeHist(img1) if self.equalizeHist else img1
 
@@ -162,7 +162,7 @@ class Dataset(Dataset):
             img1 = self.ht(img1) if self.halftone else img1
 
             # gaussian filter
-            img1 = self.cv2gaussian_filter(img1) if self.gaussian_filter else img1
+            img1 = self.cv2gaussian_filter(img1, self.gaussian_filter) if self.gaussian_filter else img1
 
             # equalize histogram
             img1 = self.cv2equalizeHist(img1) if self.equalizeHist else img1
@@ -272,8 +272,8 @@ class Dataset(Dataset):
         img = cv2.merge((b, g, r))
         return img
 
-    def cv2gaussian_filter(self, img):
-        img = cv2.GaussianBlur(img, (3, 3), 0)
+    def cv2gaussian_filter(self, img, kernel_size):
+        img = cv2.GaussianBlur(img, (kernel_size, kernel_size), 0)
         return img
 
     def cv2edge(self, img):

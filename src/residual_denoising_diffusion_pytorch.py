@@ -1314,7 +1314,7 @@ class Trainer(object):
         crop_patch=False,
         generation=False,
         halftone=None,
-        gaussian_filter=False,
+        gaussian_filter=None,
         get_sobel=None,
     ):
         super().__init__()

@@ -1,0 +1,113 @@
+:root {
+  font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: #0f172a;
+  background: #f3f6fb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top right, #eef4ff 0%, #f6f8fb 35%, #f3f6fb 100%);
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e7edf5;
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(31, 78, 145, 0.06);
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.section-desc {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field label {
+  font-size: 13px;
+  color: #475569;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  border: 1px solid #d7deea;
+  border-radius: 10px;
+  padding: 9px 12px;
+  background: #fff;
+}
+
+.btn {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background: #1d4ed8;
+}
+
+.btn.secondary {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #e0ecff;
+  color: #1d4ed8;
+}
+
+.grid {
+  display: grid;
+  gap: 14px;
+}
+
+@media (max-width: 960px) {
+  .desktop-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

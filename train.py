@@ -20,7 +20,7 @@ else:
     save_and_sample_every = 1000
     sampling_timesteps = 5
     sampling_timesteps_original_ddim_ddpm = 250
-    train_num_steps = 30000
+    train_num_steps = 80000
 
 original_ddim_ddpm = False
 if original_ddim_ddpm:
@@ -35,11 +35,11 @@ else:
 if condition:
     if input_condition:
         folder = ["/home/shenss/python/dataset/VOC2012_ORI/train/gt",
-                "/home/shenss/python/dataset/VOC2012_ORI/train/fs",
-                "/home/shenss/python/dataset/VOC2012_ORI/train/wsobel",
+                "/home/shenss/python/dataset/VOC2012_ORI/train/gt",
+                "/home/shenss/python/dataset/VOC2012_ORI/train/gt",
                 "/home/shenss/python/dataset/VOC2012_ORI/valid/gt",
-                "/home/shenss/python/dataset/VOC2012_ORI/valid/fs",
-                "/home/shenss/python/dataset/VOC2012_ORI/valid/wsobel",
+                "/home/shenss/python/dataset/VOC2012_ORI/valid/gt",
+                "/home/shenss/python/dataset/VOC2012_ORI/valid/gt",
                 ]
     else:
         folder = ["/home/shenss/python/dataset/Celebrity Face Image Dataset/train/gt",
@@ -49,7 +49,7 @@ if condition:
     train_batch_size = 1
     num_samples = 1
     sum_scale = 1
-    image_size = 256
+    image_size = (256,256)
 else:
     folder = '/home/shenss/python/dataset/CelebA/img_align_celeba'
     train_batch_size = 32
@@ -73,7 +73,7 @@ else:
     model = UnetRes(
         dim=64,
         dim_mults=(1, 2, 4, 8),
-        share_encoder=0, #1 0 -1，分别对应共享编码器、两个独立的 U-Net 和一个独立的 U-Net。
+        share_encoder=-1, #1 0 -1，分别对应共享编码器、两个独立的 U-Net 和一个独立的 U-Net。
         condition=condition,
         input_condition=input_condition
     )
@@ -83,7 +83,7 @@ else:
         timesteps=1000,           # number of steps
         # number of sampling timesteps (using ddim for faster inference [see citation for ddim paper])
         sampling_timesteps=sampling_timesteps,
-        objective='pred_res_noise', # pred_res_noise, pred_res, pred_noise
+        objective='pred_res', # pred_res_noise, pred_res, pred_noise
         loss_type='l1',            # L1 or L2 or huber(SmoothL1)
         condition=condition,
         sum_scale = sum_scale,
@@ -107,9 +107,9 @@ trainer = Trainer(
     equalizeHist=False,
     crop_patch=False,
     generation = False,
-    halftone = None,  # fs, evcs, gmevcs
+    halftone = 'gmevcs',  # fs, evcs, gmevcs
     gaussian_filter = 3,
-    get_sobel = None,  # None, sobel, canny, wsobel
+    get_sobel = 'wsobel',  # None, sobel, canny, wsobel
 )
 
 if not trainer.accelerator.is_local_main_process:

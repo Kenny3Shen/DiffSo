@@ -1,0 +1,23 @@
+[project]
+name = "diffso"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "accelerate>=1.13.0",
+    "augmentor>=0.2.12",
+    "einops>=0.8.2",
+    "ema-pytorch>=0.7.9",
+    "jupyter>=1.1.1",
+    "lmdb>=2.1.1",
+    "notebook>=7.5.5",
+    "opencv-python>=4.13.0.92",
+    "pandas>=3.0.1",
+    "polars>=1.39.3",
+    "pywavelets>=1.9.0",
+    "scikit-learn>=1.8.0",
+    "torch>=2.10.0",
+    "torchvision>=0.25.0",
+    "tqdm>=4.67.3",
+]

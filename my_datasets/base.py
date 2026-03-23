@@ -97,7 +97,7 @@ class Dataset(Dataset):
                 p.flip_left_right(1)
             if not self.crop_patch:
                 # p.resize(1, self.image_size, self.image_size)
-                p.crop_by_size(1, self.image_size, self.image_size, centre=False)
+                p.crop_by_size(1, self.image_size[0], self.image_size[1], centre=False)
             g = p.generator(batch_size=1)
             augmented_images = next(g)
             img0 = cv2.cvtColor(augmented_images[0][0], cv2.COLOR_BGR2RGB)
@@ -175,7 +175,7 @@ class Dataset(Dataset):
                 p.flip_left_right(1)
             if not self.crop_patch:
                 # p.resize(1, self.image_size, self.image_size)
-                p.crop_by_size(1, self.image_size, self.image_size, centre=False)
+                p.crop_by_size(1, self.image_size[0], self.image_size[1], centre=False)
             g = p.generator(batch_size=1)
             augmented_images = next(g)
             img0 = cv2.cvtColor(augmented_images[0][0], cv2.COLOR_BGR2RGB)
@@ -219,7 +219,7 @@ class Dataset(Dataset):
             r = np.array(Image.fromarray(r).convert("1").convert("L"))
             img = cv2.merge((b, g, r))
         elif self.halftone == "evcs":
-            (b, g, r) = cv2.split(img_bgr)
+            (b, g, r) = cv2.split(img)
             b, g, r = (
                 (b / 4).astype(np.uint8),
                 (g / 4).astype(np.uint8),
@@ -322,19 +322,29 @@ class Dataset(Dataset):
             i += 1
         return image_list
 
-    def pad_img(self, img_list, patch_size, block_size=8):
+    def pad_img(self, img_list, image_size, block_size=8):
+        """填充图像到指定尺寸
+        Args:
+            img_list: 图像列表
+            image_size: (width, height) 目标尺寸
+            block_size: 块大小，默认8
+        """
         i = 0
         for img in img_list:
             img = cv2.cvtColor(np.asarray(img), cv2.COLOR_RGB2BGR)
-            h, w = img.shape[:2]
+            h, w = img.shape[:2]  # OpenCV中shape返回(height, width, channels)
             bottom = 0
             right = 0
-            if h < patch_size:
-                bottom = patch_size - h
-                h = patch_size
-            if w < patch_size:
-                right = patch_size - w
-                w = patch_size
+            
+            # 检查高度和宽度
+            if h < image_size[1]:  # height
+                bottom = image_size[1] - h
+                h = image_size[1]
+            if w < image_size[0]:  # width
+                right = image_size[0] - w
+                w = image_size[0]
+
+            # 计算需要的填充以确保能被block_size整除
             bottom = (
                 bottom
                 + (h // block_size) * block_size
@@ -347,8 +357,12 @@ class Dataset(Dataset):
                 + (block_size if w % block_size != 0 else 0)
                 - w
             )
+
+            # 使用黑色填充边界
             img_list[i] = cv2.copyMakeBorder(
-                img, 0, bottom, 0, right, cv2.BORDER_CONSTANT, value=[0, 0, 0]
+                img, 0, bottom, 0, right, 
+                cv2.BORDER_CONSTANT, 
+                value=[0, 0, 0]
             )
             i += 1
         return img_list

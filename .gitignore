@@ -1,2 +1,107 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Data files (large datasets)
+data/
+datasets/
+*.h5
+*.hdf5
+*.npy
+*.npz
+*.mat
+*.csv
+*.json
+
+# Model files (large models)
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.pkl
+*.pickle
+
+# Results and logs
+results/
+logs/
+*.log
+*.log.*
+wandb/
+mlruns/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+.cache/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Frontend
+node_modules/
+dist/
+.nuxt/
+.cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
 # ignore ./result and ./result/*
 results/
+.github/
+.venv/
+node_modules/
+dist/
+*.pyc
+__pycache__/
+*.pkl
+*.h5
+*.hdf5
+*.npy
+*.npz
